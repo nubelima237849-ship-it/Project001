@@ -1,0 +1,174 @@
+==============================================================
+  GUIA RAPIDA DE GIT PARA ESTE PROYECTO
+==============================================================
+
+  Repositorio: Project001
+  Carpetas:    pokedex/   humanizador-ia/
+
+  Idea central:
+    main            = versión estable (lo que funciona)
+    otra rama       = trabajo nuevo (un cambio = una rama)
+    commit          = foto guardada de tus cambios
+    pull request    = propuesta para unir una rama a main
+
+
+--------------------------------------------------------------
+ 1. CONFIGURACION INICIAL (solo una vez en tu PC)
+--------------------------------------------------------------
+
+  git config --global user.name  "Tu Nombre"
+  git config --global user.email "tu@correo.com"
+  git config --global init.defaultBranch main
+  git config --global pull.rebase false
+
+
+--------------------------------------------------------------
+ 2. CLONAR EL PROYECTO (solo la primera vez)
+--------------------------------------------------------------
+
+  git clone https://github.com/nubelima237849-ship-it/Project001.git
+  cd Project001
+
+
+--------------------------------------------------------------
+ 3. VER EL ESTADO (lo que mas usaras)
+--------------------------------------------------------------
+
+  git status              qué archivos cambiaron
+  git diff                qué cambió exactamente (q para salir)
+  git log --oneline -10   últimos 10 commits
+  git branch              en qué rama estás (la marcada con *)
+
+
+--------------------------------------------------------------
+ 4. ACTUALIZAR TU PROYECTO CON LO NUEVO
+--------------------------------------------------------------
+
+  Regla de oro: antes de empezar a trabajar, trae lo último.
+
+  git checkout main       ir a la rama principal
+  git pull                traer los cambios de GitHub
+
+  Si tenías cambios sin guardar y pull falla, guárdalos:
+
+  git stash               guarda tus cambios temporalmente
+  git pull
+  git stash pop           los vuelve a poner
+
+  Para ver una rama que aún no está en main:
+
+  git fetch origin
+  git checkout nombre-de-la-rama
+
+
+--------------------------------------------------------------
+ 5. FLUJO DIARIO PARA HACER UN CAMBIO
+--------------------------------------------------------------
+
+  a) Crea una rama nueva desde main actualizado:
+
+     git checkout main
+     git pull
+     git checkout -b mi-cambio
+
+  b) Haz tus cambios y revisa:
+
+     git status
+     git diff
+
+  c) Guarda (commit) lo que quieres conservar:
+
+     git add archivo.js            solo ese archivo
+     git add carpeta/              todo lo de una carpeta
+     git commit -m "Descripcion corta de lo que cambiaste"
+
+  d) Sube la rama a GitHub:
+
+     git push -u origin mi-cambio
+
+  e) Abre un Pull Request en GitHub (o pide al asistente que lo haga),
+     revísalo y fusiónalo en main.
+
+  f) Cuando se fusione, actualiza main en tu PC:
+
+     git checkout main
+     git pull
+
+
+--------------------------------------------------------------
+ 6. DESHACER COSAS (con cuidado)
+--------------------------------------------------------------
+
+  git restore archivo.js          descarta cambios NO guardados de ese archivo
+  git restore --staged archivo.js saca un archivo de "add" sin borrar cambios
+  git commit --amend              corrige el último commit (solo si no
+                                  lo subiste, o sabes lo que haces)
+  git revert <id-commit>          crea un commit que deshace otro (seguro)
+
+  NO uses sin entender:
+    git reset --hard   (borra cambios sin guardar de forma permanente)
+    git push --force   (reescribe la historia de GitHub)
+
+
+--------------------------------------------------------------
+ 7. BUENAS PRACTICAS
+--------------------------------------------------------------
+
+  - Un commit = un cambio lógico. Mensajes claros en presente:
+      "Agrega pantalla de login", no "cosas varias".
+  - No trabajes directamente en main. Usa una rama por cambio.
+  - Revisa git status antes de cada commit.
+  - No subas archivos con contraseñas o claves (.env). Revisa .gitignore.
+  - Haz git pull seguido, sobre todo antes de empezar.
+  - Si algo sale mal, no entres en pánico: git status y git log
+    te dicen dónde estás. Pregunta antes de usar reset o force.
+
+
+--------------------------------------------------------------
+ 8. ATAJOS Y MEJORAS PARA LA TERMINAL
+--------------------------------------------------------------
+
+  git st                  (opcional) crea un alias corto:
+                          git config --global alias.st status
+                          git config --global alias.lg "log --oneline --graph --all"
+                          git config --global alias.co checkout
+
+  git lg                  historial visual de todas las ramas
+
+  Tecla TAB                autocompleta nombres de ramas y archivos
+  Flecha arriba            repite comandos anteriores
+  git branch -d rama       borra una rama ya fusionada
+
+
+--------------------------------------------------------------
+ 9. FLUJO COMPLETO DE EJEMPLO (copiar y adaptar)
+--------------------------------------------------------------
+
+  git checkout main
+  git pull
+  git checkout -b agrega-boton
+  # ...editas archivos...
+  git status
+  git add humanizador-ia/src/App.jsx
+  git commit -m "Agrega boton de humanizar"
+  git push -u origin agrega-boton
+  # Abre el Pull Request en GitHub y fusionalo
+  git checkout main
+  git pull
+
+
+--------------------------------------------------------------
+ 10. CHULETA RAPIDA
+--------------------------------------------------------------
+
+  git status            estado
+  git pull              traer cambios
+  git checkout -b X     crear rama X
+  git checkout X        cambiar a rama X
+  git add .             preparar todo
+  git commit -m "msg"   guardar
+  git push              subir
+  git stash / pop       guardar y recuperar cambios temporales
+  git log --oneline     historial
+
+==============================================================
