@@ -1,0 +1,165 @@
+================================================================
+GUÍA PRÁCTICA DE GIT Y GITHUB DESDE CERO
+Flujo completo: crear carpeta → proyecto Vite React → login →
+subir a GitHub → manejar versiones → observar y cargar versiones
+================================================================
+Nota: las líneas que empiezan con # son comentarios explicativos,
+no comandos. Los comandos se escriben tal cual en la terminal.
+
+----------------------------------------------------------------
+SECCIÓN 1 · CREAR LA CARPETA DE TRABAJO Y ENTRAR EN ELLA
+----------------------------------------------------------------
+# Ir al disco/unidad donde quieres trabajar.
+# En Windows, cambiar de disco se hace escribiendo la letra:
+D:
+# En Mac/Linux navega con cd a la ruta, por ejemplo:
+# cd /Users/tuusuario/Documentos
+
+# Crear la carpeta contenedora de tus proyectos:
+mkdir mis-proyectos
+
+# Entrar en esa carpeta:
+cd mis-proyectos
+
+# TRUCO: si una carpeta tiene espacios en el nombre, la terminal
+# los protege automáticamente al autocompletar con Tab:
+#   cd Mi\ Carpeta        (con barra invertida, escape)
+#   cd "Mi Carpeta"       (con comillas)
+# Ambas funcionan igual. El espacio separa argumentos en la
+# terminal; el escape o las comillas lo convierten en parte del
+# nombre.
+
+----------------------------------------------------------------
+SECCIÓN 2 · CREAR EL PROYECTO VITE + REACT
+----------------------------------------------------------------
+# Crear el proyecto con la plantilla oficial de React:
+npm create vite@latest mi-app -- --template react
+
+# Entrar al proyecto recién creado:
+cd mi-app
+
+# Instalar las dependencias:
+npm install
+
+# Probar que funciona (abre el servidor de desarrollo):
+npm run dev
+
+----------------------------------------------------------------
+SECCIÓN 3 · PRIMER INICIO DE SESIÓN (SOLO LA PRIMERA VEZ)
+----------------------------------------------------------------
+# Identidad para tus commits; se guarda en tu PC una sola vez:
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu-email@ejemplo.com"
+
+# Iniciar sesión en GitHub con la herramienta oficial gh:
+gh auth login
+# Te guía con preguntas: elige GitHub.com → HTTPS →
+# "Login with a web browser" y autoriza en el navegador.
+
+----------------------------------------------------------------
+SECCIÓN 4 · CREAR EL REPOSITORIO Y SUBIR LA PRIMERA VERSIÓN
+----------------------------------------------------------------
+# Iniciar Git dentro de la carpeta del proyecto:
+git init
+
+# Renombrar la rama inicial a main (estándar actual):
+git branch -M main
+
+# Guardar todos los archivos como primera versión:
+git add .
+git commit -m "primer commit: proyecto Vite React inicial"
+
+# Crear el repositorio en GitHub y subirlo en un solo paso:
+gh repo create mi-app --public --source=. --push
+# Usa --private en vez de --public si lo quieres privado.
+#
+# Con esto, la rama "main" queda registrada en GitHub como tu
+# versión principal.
+
+----------------------------------------------------------------
+SECCIÓN 5 · MANEJAR VERSIONES AL HACER MODIFICACIONES
+----------------------------------------------------------------
+# MEJOR PRÁCTICA: no trabajar directo en main. Crea una rama
+# por cada cambio. Dos sistemas se complementan:
+#   - RAMAS (branches): para trabajo en progreso.
+#   - ETIQUETAS (tags): para versiones oficiales (v1.0.0, etc.)
+#     con versionado semántico MAJOR.MENOR.PARCHE:
+#       MAJOR: cambios que rompen compatibilidad
+#       MENOR: funciones nuevas compatibles
+#       PARCHE: correcciones de errores
+
+# 1. Crear una rama para tu cambio y moverte a ella:
+git switch -c agregar-navbar
+
+# 2. Modificas archivos en tu editor...
+
+# 3. Ver qué cambió:
+git status
+git diff
+
+# 4. Guardar la versión (commit):
+git add .
+git commit -m "agrega barra de navegación"
+
+# 5. Subir la rama a GitHub:
+git push origin agregar-navbar
+
+# 6. Crear el pull request desde la terminal:
+gh pr create --base main --head agregar-navbar --title "Agrega navbar" --body "Descripción del cambio"
+
+# 7. Cuando esté aprobado, fusionarlo y actualizar tu main local:
+gh pr merge
+git switch main
+git pull
+
+----------------------------------------------------------------
+SECCIÓN 6 · MARCAR VERSIONES OFICIALES CON TAGS
+----------------------------------------------------------------
+# Crear una etiqueta de versión sobre main:
+git tag -a v1.0.0 -m "Primera versión estable"
+
+# Subir la etiqueta (los tags NO suben con un push normal):
+git push origin v1.0.0
+
+# O subir todas las etiquetas de golpe:
+git push --tags
+
+----------------------------------------------------------------
+SECCIÓN 7 · OBSERVAR LAS VERSIONES
+----------------------------------------------------------------
+# Historial de commits (versiones guardadas), resumido:
+git log --oneline
+
+# Ver todas las ramas, locales y remotas:
+git branch -a
+
+# Ver todas las etiquetas de versión:
+git tag
+
+# En GitHub web: pestaña "Commits" para el historial y
+# "Releases / Tags" para las versiones etiquetadas.
+
+----------------------------------------------------------------
+SECCIÓN 8 · CARGAR (VOLVER A) CUALQUIER VERSIÓN
+----------------------------------------------------------------
+# Cambiar a otra rama:
+git switch main
+
+# Descargar y cargar una rama remota que no tienes en local:
+git fetch origin
+git switch nombre-de-la-rama
+
+# Ver el código de una versión etiquetada (modo solo lectura):
+git checkout v1.0.0
+
+# Volver al estado actual después de mirar:
+git switch main
+
+----------------------------------------------------------------
+REGLA DE ORO
+----------------------------------------------------------------
+# "git status" es tu amigo: úsalo siempre que no sepas en qué
+# rama estás o qué cambios tienes pendientes.
+# Flujo resumido de cada día de trabajo:
+#   git switch main → git pull → git switch -c mi-cambio →
+#   editar → git add . → git commit → git push → gh pr create
