@@ -1,0 +1,108 @@
+CONFIGURACIÓN DEL PROYECTO
+==========================
+
+Alcance
+-------
+Las rutas siguientes son relativas a la raíz del repositorio. La aplicación
+está en pokedex/: utiliza React 19, Vite 8 y JavaScript con módulos ES.
+Este documento describe únicamente archivos y comandos existentes; no incluye
+credenciales, valores de entorno privados ni datos personales.
+
+Archivos de configuración
+------------------------
+
+1. pokedex/package.json
+   Propósito: manifiesto de npm con dependencias y comandos de la aplicación.
+   Opciones principales:
+   - name: pokedex; version: 0.0.0; private: true, para evitar su publicación
+     accidental como paquete de npm.
+   - type: module, para utilizar módulos ES.
+   - dependencies: react y react-dom, ambos con rango ^19.3.1.
+   - devDependencies: vite (^8.3.6), @vitejs/plugin-react (^6.1.2),
+     oxlint (^1.90.0), @types/react y @types/react-dom (^19.3.0).
+     Los tipos instalados no implican que el proyecto use TypeScript.
+   - scripts: dev (vite), build (vite build), lint (oxlint) y
+     preview (vite preview).
+
+2. pokedex/package-lock.json
+   Propósito: fijar el árbol de dependencias resuelto por npm para permitir
+   instalaciones reproducibles.
+   Opciones principales: lockfileVersion: 3; versiones, integridad y relaciones
+   de los paquetes en packages. Complementa los rangos de package.json.
+   Vite declara engines.node: ^20.19.0 || >=22.12.0.
+
+3. pokedex/vite.config.js
+   Propósito: configurar Vite mediante defineConfig.
+   Opción principal: plugins: [react()], con @vitejs/plugin-react para React.
+   No define explícitamente puerto, host, proxy, variables de entorno ni
+   opciones de compilación. React Compiler no está habilitado, según las
+   instrucciones y la documentación del proyecto.
+
+4. pokedex/.oxlintrc.json
+   Propósito: configurar el análisis estático de Oxlint.
+   Opciones principales:
+   - $schema: ./node_modules/oxlint/configuration_schema.json.
+   - plugins: react y oxc.
+   - react/rules-of-hooks: error.
+   - react/only-export-components: warn, con allowConstantExport: true.
+
+5. pokedex/.gitignore
+   Propósito: excluir archivos generados y ajustes locales del control de
+   versiones.
+   Patrones principales: logs y archivos *.log, node_modules, dist, dist-ssr,
+   *.local, archivos del sistema y de editores. Excluye .vscode/*, con la
+   excepción !.vscode/extensions.json; esa excepción no indica que el archivo
+   exista en el repositorio.
+
+6. pokedex/index.html
+   Propósito: documento HTML de entrada y metadatos básicos de la aplicación.
+   Opciones principales: idioma en, codificación UTF-8, viewport adaptable,
+   título pokedex e icono /favicon.svg. El contenedor tiene id root y el módulo
+   inicial es /src/main.jsx.
+
+Instrucciones y documentación existentes
+---------------------------------------
+- pokedex/AGENTS.md: instrucciones para trabajar en la aplicación, con los
+  comandos y convenciones del proyecto. Indica usar npm, verificar con lint
+  y build, y mantener React Compiler deshabilitado salvo petición expresa.
+- pokedex/README.md: documentación de la plantilla React + Vite. Las variantes
+  de plugins y TypeScript allí descritas no son configuraciones adicionales
+  instaladas en este proyecto.
+- README.md: identificación del proyecto en la raíz; no define comandos.
+
+Instalación, ejecución y verificación
+------------------------------------
+Requisito de Node.js: ^20.19.0 || >=22.12.0, declarado por Vite en el lockfile
+y documentado en pokedex/AGENTS.md. El gestor indicado es npm.
+
+Desde la raíz del repositorio:
+
+  cd pokedex
+  npm install
+
+Desarrollo con recarga de módulos:
+
+  npm run dev
+
+Verificación indicada en pokedex/AGENTS.md:
+
+  npm run lint && npm run build
+
+La compilación genera dist/ dentro de pokedex/. El comando build no ejecuta
+el análisis estático: lint se ejecuta por separado.
+
+Para servir localmente la compilación, después de ejecutar build:
+
+  npm run preview
+
+Los comandos npm anteriores se ejecutan dentro de pokedex/, no desde la raíz.
+No hay comandos configurados para pruebas automatizadas, comprobación de
+tipos ni formateo, ni una configuración de integración continua versionada.
+
+Variables de entorno y límites
+------------------------------
+No se encontraron archivos .env versionados ni referencias explícitas a
+variables mediante import.meta.env o process.env en el código inspeccionado.
+No se requieren nombres de variables específicos según los archivos revisados.
+No se documenta la configuración interna de Git ni archivos de autenticación
+del entorno de trabajo, porque no forman parte de la configuración de la app.
