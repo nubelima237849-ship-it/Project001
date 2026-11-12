@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Manual de Git y GitHub desde cero</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --ink: #1d2433;
+    --muted: #5b6474;
+    --line: #e2e6ef;
+    --accent: #2563eb;
+    --accent-soft: #e8efff;
+    --ok: #15803d;
+    --ok-soft: #e7f6ec;
+    --warn: #b45309;
+    --warn-soft: #fff4e0;
+    --code-bg: #0f172a;
+    --code-ink: #e2e8f0;
+    --code-muted: #94a3b8;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  header.hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #38bdf8 100%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 40px 36px;
+    margin-bottom: 28px;
+  }
+  header.hero h1 { margin: 0 0 8px; font-size: 2rem; line-height: 1.2; }
+  header.hero p { margin: 0; opacity: .92; font-size: 1.05rem; }
+
+  nav.indice {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  nav.indice h2 { margin: 0 0 10px; font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  nav.indice ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 32px; }
+  nav.indice a { color: var(--accent); text-decoration: none; }
+  nav.indice a:hover { text-decoration: underline; }
+
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+  }
+  section.card h2 {
+    margin: 0 0 14px;
+    font-size: 1.45rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: .95rem; flex: none;
+  }
+  h3 { margin: 22px 0 8px; font-size: 1.12rem; }
+  p { margin: 0 0 12px; }
+  ol.pasos > li { margin-bottom: 14px; }
+  ol.pasos > li::marker { color: var(--accent); font-weight: 700; }
+
+  pre.cmd {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-radius: 10px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .92rem;
+    line-height: 1.55;
+    margin: 10px 0 16px;
+  }
+  pre.cmd .c { color: var(--code-muted); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: var(--accent-soft);
+    color: #1e40af;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: .9em;
+  }
+  pre.cmd code { background: none; color: inherit; padding: 0; }
+
+  .nota, .aviso, .ok {
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: .95rem;
+  }
+  .nota { background: var(--accent-soft); border-left: 4px solid var(--accent); }
+  .aviso { background: var(--warn-soft); border-left: 4px solid var(--warn); }
+  .ok { background: var(--ok-soft); border-left: 4px solid var(--ok); }
+
+  figure { margin: 18px 0; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { color: var(--muted); font-size: .9rem; text-align: center; margin-top: 6px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 6px; font-size: .95rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f1f4fa; font-weight: 600; }
+  td code { white-space: nowrap; }
+
+  footer { color: var(--muted); font-size: .9rem; text-align: center; margin-top: 32px; }
+
+  @media (max-width: 640px) {
+    header.hero { padding: 28px 22px; }
+    header.hero h1 { font-size: 1.6rem; }
+    section.card { padding: 20px 18px; }
+    nav.indice ol { columns: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Manual de Git y GitHub desde cero</h1>
+    <p>Crear tu proyecto, subirlo a GitHub, manejar versiones, borrar lo que no necesitas y elegir plantillas para tus proyectos y agentes.</p>
+  </header>
+
+  <nav class="indice">
+    <h2>Índice</h2>
+    <ol>
+      <li><a href="#mapa">Cómo viaja tu código</a></li>
+      <li><a href="#carpeta">Carpeta de trabajo</a></li>
+      <li><a href="#proyecto">Crear proyecto Vite + React</a></li>
+      <li><a href="#login">Iniciar sesión (una vez)</a></li>
+      <li><a href="#primera">Primera versión en main</a></li>
+      <li><a href="#versiones">Manejar versiones</a></li>
+      <li><a href="#observar">Observar y cargar versiones</a></li>
+      <li><a href="#borrar-archivos">Borrar archivos y carpetas</a></li>
+      <li><a href="#borrar-versiones">Borrar versiones</a></li>
+      <li><a href="#plantillas">Plantillas recomendadas</a></li>
+      <li><a href="#chuleta">Chuleta de comandos</a></li>
+    </ol>
+  </nav>
+
+  <!-- MAPA -->
+  <section class="card" id="mapa">
+    <h2><span class="num">1</span>Cómo viaja tu código</h2>
+    <p>Tu PC guarda una copia del proyecto y GitHub guarda la copia central. Cada cambio sigue este camino:</p>
+    <figure>
+      <svg viewBox="0 0 900 220" role="img" aria-label="Flujo: PC, rama de trabajo, pull request, main y tag">
+        <defs>
+          <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+          </marker>
+        </defs>
+        <g font-family="system-ui, Segoe UI, Arial" font-size="15" text-anchor="middle">
+          <rect x="10" y="70" width="150" height="70" rx="12" fill="#e8efff" stroke="#2563eb" stroke-width="2"/>
+          <text x="85" y="98" fill="#1d2433" font-weight="700">Tu PC</text>
+          <text x="85" y="120" fill="#5b6474" font-size="13">add + commit</text>
+
+          <rect x="200" y="70" width="170" height="70" rx="12" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+          <text x="285" y="98" fill="#1d2433" font-weight="700">Rama de trabajo</text>
+          <text x="285" y="120" fill="#5b6474" font-size="13">mi-cambio</text>
+
+          <rect x="410" y="70" width="170" height="70" rx="12" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+          <text x="495" y="98" fill="#1d2433" font-weight="700">Pull request</text>
+          <text x="495" y="120" fill="#5b6474" font-size="13">revisión</text>
+
+          <rect x="620" y="70" width="130" height="70" rx="12" fill="#e7f6ec" stroke="#15803d" stroke-width="2"/>
+          <text x="685" y="98" fill="#1d2433" font-weight="700">main</text>
+          <text x="685" y="120" fill="#5b6474" font-size="13">versión estable</text>
+
+          <rect x="785" y="70" width="105" height="70" rx="12" fill="#fff4e0" stroke="#b45309" stroke-width="2"/>
+          <text x="837" y="98" fill="#1d2433" font-weight="700">Tag</text>
+          <text x="837" y="120" fill="#5b6474" font-size="13">v1.0.0</text>
+
+          <line x1="160" y1="105" x2="198" y2="105" stroke="#2563eb" stroke-width="2.5" marker-end="url(#flecha)"/>
+          <text x="179" y="98" fill="#5b6474" font-size="12">push</text>
+          <line x1="370" y1="105" x2="408" y2="105" stroke="#2563eb" stroke-width="2.5" marker-end="url(#flecha)"/>
+          <line x1="580" y1="105" x2="618" y2="105" stroke="#15803d" stroke-width="2.5" marker-end="url(#flecha)"/>
+          <text x="599" y="98" fill="#5b6474" font-size="12">merge</text>
+          <line x1="750" y1="105" x2="783" y2="105" stroke="#b45309" stroke-width="2.5" marker-end="url(#flecha)"/>
+
+          <path d="M685,140 C685,190 85,190 85,142" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#flecha)"/>
+          <text x="385" y="200" fill="#15803d" font-size="13">git pull (traer main a tu PC)</text>
+        </g>
+      </svg>
+      <figcaption>Figura 1. Ciclo completo: trabajas en una rama, la revisas con un pull request, la fusionas a main y la etiquetas si es una versión oficial.</figcaption>
+    </figure>
+    <div class="nota"><strong>Idea clave:</strong> <code>main</code> es tu versión estable. No trabajes directamente en ella: crea una rama por cada cambio.</div>
+  </section>
+
+  <!-- CARPETA -->
+  <section class="card" id="carpeta">
+    <h2><span class="num">2</span>Crear la carpeta de trabajo</h2>
+    <ol class="pasos">
+      <li>Abre la terminal (CMD, PowerShell o Git Bash en Windows).</li>
+      <li>Cambia al disco donde quieres trabajar y crea la carpeta:
+<pre class="cmd"><span class="c"># En Windows, cambiar de disco es escribir la letra</span>
+D:
+
+<span class="c"># Crear la carpeta contenedora y entrar en ella</span>
+mkdir mis-proyectos
+cd mis-proyectos</pre>
+      </li>
+      <li><strong>Espacios en nombres:</strong> la terminal usa el espacio para separar palabras. Si tu carpeta se llama <code>Mi Carpeta</code>, protégela con escape o comillas. El Tab lo hace solo:
+<pre class="cmd">cd Mi\ Carpeta
+cd "Mi Carpeta"</pre>
+      </li>
+    </ol>
+    <div class="nota">Consejo: usa guiones en los nombres (<code>mi-carpeta</code>) y evitarás este problema.</div>
+  </section>
+
+  <!-- PROYECTO -->
+  <section class="card" id="proyecto">
+    <h2><span class="num">3</span>Crear el proyecto Vite + React</h2>
+    <p>Necesitas Node.js 20.19 o superior (o 22.12 o superior). Comprueba tu versión con <code>node -v</code>.</p>
+<pre class="cmd"><span class="c"># Crear el proyecto con la plantilla oficial de React</span>
+npm create vite@latest mi-app -- --template react
+
+<span class="c"># Entrar, instalar dependencias y probar</span>
+cd mi-app
+npm install
+npm run dev</pre>
+    <p>Abre la dirección que muestra la terminal (normalmente <code>http://localhost:5173</code>). Para detenerlo, pulsa <code>Ctrl + C</code>.</p>
+  </section>
+
+  <!-- LOGIN -->
+  <section class="card" id="login">
+    <h2><span class="num">4</span>Iniciar sesión (solo la primera vez)</h2>
+    <ol class="pasos">
+      <li>Guarda tu nombre y correo para los commits. Se hace una sola vez en tu PC:
+<pre class="cmd">git config --global user.name "Tu Nombre"
+git config --global user.email "tu-email@ejemplo.com"</pre>
+      </li>
+      <li>Inicia sesión en GitHub con la herramienta oficial <code>gh</code>:
+<pre class="cmd">gh auth login</pre>
+        Elige <strong>GitHub.com</strong>, luego <strong>HTTPS</strong> y <strong>Login with a web browser</strong>. Copia el código que aparece, pégalo en el navegador y autoriza.
+      </li>
+      <li>Verifica que quedó activo:
+<pre class="cmd">gh auth status</pre>
+      </li>
+    </ol>
+  </section>
+
+  <!-- PRIMERA VERSION -->
+  <section class="card" id="primera">
+    <h2><span class="num">5</span>Subir la primera versión (main)</h2>
+    <ol class="pasos">
+      <li>Dentro de la carpeta del proyecto, inicia Git y nombra la rama principal <code>main</code>:
+<pre class="cmd">git init
+git branch -M main</pre>
+      </li>
+      <li>Guarda todos los archivos como primera versión (commit):
+<pre class="cmd">git add .
+git commit -m "primer commit: proyecto Vite React inicial"</pre>
+      </li>
+      <li>Crea el repositorio en GitHub y sube <code>main</code> en un solo paso:
+<pre class="cmd">gh repo create mi-app --public --source=. --push</pre>
+        Usa <code>--private</code> si quieres que sea privado. Al terminar, tu proyecto aparece en GitHub con la rama <code>main</code>.
+      </li>
+    </ol>
+    <div class="aviso">Antes de subir, revisa que no haya contraseñas ni claves en tus archivos. El archivo <code>.env</code> debe estar en <code>.gitignore</code>; Vite ya lo incluye en las plantillas nuevas.</div>
+  </section>
+
+  <!-- VERSIONES -->
+  <section class="card" id="versiones">
+    <h2><span class="num">6</span>Manejar versiones al modificar</h2>
+    <p>Hay dos herramientas que se complementan:</p>
+    <table>
+      <thead><tr><th>Herramienta</th><th>Para qué sirve</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Rama (branch)</strong></td><td>Trabajo en curso, una por cada cambio</td><td><code>agregar-navbar</code></td></tr>
+        <tr><td><strong>Etiqueta (tag)</strong></td><td>Versión oficial, con número fijo</td><td><code>v1.0.0</code></td></tr>
+      </tbody>
+    </table>
+    <p>El número de versión sigue el formato <code>MAJOR.MENOR.PARCHE</code>: <strong>MAJOR</strong> cuando rompes compatibilidad, <strong>MENOR</strong> cuando añades funciones, <strong>PARCHE</strong> cuando corriges errores.</p>
+
+    <figure>
+      <svg viewBox="0 0 900 300" role="img" aria-label="Ramas: main con commits, rama de cambio que se fusiona y tag v1.0.0">
+        <g font-family="system-ui, Segoe UI, Arial" font-size="14">
+          <line x1="60" y1="90" x2="840" y2="90" stroke="#15803d" stroke-width="4"/>
+          <text x="20" y="95" fill="#15803d" font-weight="700">main</text>
+          <circle cx="110" cy="90" r="9" fill="#15803d"/>
+          <circle cx="330" cy="90" r="9" fill="#15803d"/>
+          <circle cx="640" cy="90" r="9" fill="#15803d"/>
+          <circle cx="810" cy="90" r="9" fill="#15803d"/>
+
+          <path d="M330,90 C360,90 370,190 400,190 L580,190 C610,190 620,90 640,90" fill="none" stroke="#2563eb" stroke-width="4"/>
+          <text x="20" y="195" fill="#2563eb" font-weight="700">agregar-navbar</text>
+          <circle cx="400" cy="190" r="8" fill="#2563eb"/>
+          <circle cx="480" cy="190" r="8" fill="#2563eb"/>
+          <circle cx="560" cy="190" r="8" fill="#2563eb"/>
+
+          <text x="110" y="70" fill="#1d2433" text-anchor="middle">primer commit</text>
+          <text x="330" y="70" fill="#1d2433" text-anchor="middle">rama creada</text>
+          <text x="400" y="222" fill="#5b6474" text-anchor="middle" font-size="12">commits de trabajo</text>
+          <text x="640" y="70" fill="#1d2433" text-anchor="middle">merge (PR)</text>
+          <text x="810" y="70" fill="#b45309" text-anchor="middle" font-weight="700">v1.0.0</text>
+          <path d="M810,60 L810,20" stroke="#b45309" stroke-width="2"/>
+          <rect x="770" y="8" width="80" height="22" rx="6" fill="#fff4e0" stroke="#b45309"/>
+          <text x="810" y="24" fill="#b45309" text-anchor="middle" font-size="13" font-weight="700">tag</text>
+        </g>
+      </svg>
+      <figcaption>Figura 2. Trabajas en una rama, la fusionas a main y marcas la versión con un tag.</figcaption>
+    </figure>
+
+<pre class="cmd"><span class="c"># 1. Actualizar main y crear la rama de tu cambio</span>
+git switch main
+git pull
+git switch -c agregar-navbar
+
+<span class="c"># 2. Modifica archivos en tu editor y revisa qué cambió</span>
+git status
+git diff
+
+<span class="c"># 3. Guardar la versión (commit)</span>
+git add .
+git commit -m "agrega barra de navegación"
+
+<span class="c"># 4. Subir la rama y abrir el pull request</span>
+git push origin agregar-navbar
+gh pr create --base main --head agregar-navbar --title "Agrega navbar"
+
+<span class="c"># 5. Cuando esté aprobado: fusionar y actualizar main en tu PC</span>
+gh pr merge
+git switch main
+git pull</pre>
+
+    <h3>Marcar una versión oficial</h3>
+<pre class="cmd"><span class="c"># Crear la etiqueta sobre main y subirla a GitHub</span>
+git switch main
+git pull
+git tag -a v1.0.0 -m "Primera versión estable"
+git push origin v1.0.0</pre>
+    <p>Los tags no se suben con un <code>git push</code> normal: necesitas el comando de arriba o <code>git push --tags</code>.</p>
+  </section>
+
+  <!-- OBSERVAR Y CARGAR -->
+  <section class="card" id="observar">
+    <h2><span class="num">7</span>Observar y cargar versiones</h2>
+<pre class="cmd"><span class="c"># Historial de versiones (commits), en una línea cada uno</span>
+git log --oneline
+
+<span class="c"># Ramas locales y remotas</span>
+git branch -a
+
+<span class="c"># Etiquetas de versión</span>
+git tag
+
+<span class="c"># Traer las ramas nuevas de GitHub sin cambiar tus archivos</span>
+git fetch origin
+
+<span class="c"># Cambiar a una rama (tus archivos cambian a esa versión)</span>
+git switch nombre-de-la-rama
+
+<span class="c"># Ver una versión etiquetada en modo solo lectura</span>
+git checkout v1.0.0
+
+<span class="c"># Volver al presente</span>
+git switch main</pre>
+    <div class="nota">En GitHub web: la pestaña <strong>Commits</strong> muestra el historial y <strong>Tags</strong> o <strong>Releases</strong> muestra las versiones etiquetadas.</div>
+    <div class="aviso"><code>git checkout v1.0.0</code> deja el proyecto en modo "solo lectura". Si haces cambios allí, pueden perderse al cambiar de rama. Para trabajar sobre una versión antigua, crea una rama: <code>git switch -c arreglo-v1 v1.0.0</code>.</div>
+  </section>
+
+  <!-- BORRAR ARCHIVOS -->
+  <section class="card" id="borrar-archivos">
+    <h2><span class="num">8</span>Borrar archivos y carpetas</h2>
+    <ol class="pasos">
+      <li><strong>Borrar del proyecto y de Git:</strong>
+<pre class="cmd"><span class="c"># Un archivo</span>
+git rm archivo.txt
+
+<span class="c"># Una carpeta completa</span>
+git rm -r nombre-carpeta
+
+<span class="c"># Guardar el borrado como versión y subirlo</span>
+git commit -m "elimina archivos innecesarios"
+git push</pre>
+        El borrado también queda registrado en el historial, pero deja de estar en la versión actual.
+      </li>
+      <li><strong>Dejar de rastrear sin borrar de tu PC</strong> (útil para <code>.env</code> o archivos locales):
+<pre class="cmd">git rm --cached archivo.txt
+git rm -r --cached nombre-carpeta</pre>
+        Después agrégalo a <code>.gitignore</code>, haz commit y push.
+      </li>
+    </ol>
+  </section>
+
+  <!-- BORRAR VERSIONES -->
+  <section class="card" id="borrar-versiones">
+    <h2><span class="num">9</span>Borrar versiones</h2>
+    <figure>
+      <svg viewBox="0 0 900 230" role="img" aria-label="Qué borrar según la situación">
+        <g font-family="system-ui, Segoe UI, Arial" font-size="14">
+          <rect x="330" y="10" width="240" height="46" rx="10" fill="#e8efff" stroke="#2563eb" stroke-width="2"/>
+          <text x="450" y="38" text-anchor="middle" fill="#1d2433" font-weight="700">¿Qué quieres borrar?</text>
+
+          <rect x="10" y="100" width="200" height="110" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+          <text x="110" y="128" text-anchor="middle" font-weight="700" fill="#1d2433">Rama</text>
+          <text x="110" y="150" text-anchor="middle" fill="#5b6474" font-size="12">ya fusionada: seguro</text>
+          <text x="110" y="168" text-anchor="middle" fill="#5b6474" font-size="12">git branch -d</text>
+          <text x="110" y="186" text-anchor="middle" fill="#5b6474" font-size="12">git push --delete</text>
+
+          <rect x="235" y="100" width="200" height="110" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+          <text x="335" y="128" text-anchor="middle" font-weight="700" fill="#1d2433">Tag</text>
+          <text x="335" y="150" text-anchor="middle" fill="#5b6474" font-size="12">versión marcada</text>
+          <text x="335" y="168" text-anchor="middle" fill="#5b6474" font-size="12">git tag -d</text>
+          <text x="335" y="186" text-anchor="middle" fill="#5b6474" font-size="12">git push --delete</text>
+
+          <rect x="460" y="100" width="200" height="110" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="2"/>
+          <text x="560" y="128" text-anchor="middle" font-weight="700" fill="#1d2433">Commit ya subido</text>
+          <text x="560" y="150" text-anchor="middle" fill="#5b6474" font-size="12">deshacer sin reescribir</text>
+          <text x="560" y="168" text-anchor="middle" fill="#5b6474" font-size="12">git revert</text>
+          <text x="560" y="186" text-anchor="middle" fill="#5b6474" font-size="12">git push</text>
+
+          <rect x="685" y="100" width="205" height="110" rx="10" fill="#fff4e0" stroke="#b45309" stroke-width="2"/>
+          <text x="787" y="128" text-anchor="middle" font-weight="700" fill="#1d2433">Historial</text>
+          <text x="787" y="150" text-anchor="middle" fill="#5b6474" font-size="12">reescribir: avanzado</text>
+          <text x="787" y="168" text-anchor="middle" fill="#5b6474" font-size="12">git rebase -i</text>
+          <text x="787" y="186" text-anchor="middle" fill="#5b6474" font-size="12">push --force-with-lease</text>
+
+          <line x1="450" y1="56" x2="110" y2="100" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="450" y1="56" x2="335" y2="100" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="450" y1="56" x2="560" y2="100" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="450" y1="56" x2="787" y2="100" stroke="#b45309" stroke-width="2" stroke-dasharray="6 5"/>
+        </g>
+      </svg>
+      <figcaption>Figura 3. Elige el comando según lo que quieras borrar.</figcaption>
+    </figure>
+
+    <h3>9.1 · Borrar ramas que ya no necesitas</h3>
+<pre class="cmd"><span class="c"># Borrar la rama local (Git avisa si no está fusionada)</span>
+git branch -d agregar-navbar
+
+<span class="c"># Borrar la misma rama en GitHub</span>
+git push origin --delete agregar-navbar
+
+<span class="c"># Forzar el borrado local SIN fusionar (pierdes ese trabajo)</span>
+git branch -D agregar-navbar</pre>
+    <div class="ok">Borrar una rama ya fusionada no pierde nada: sus cambios ya están en <code>main</code>.</div>
+
+    <h3>9.2 · Borrar tags</h3>
+<pre class="cmd">git tag -d v0.9.0
+git push origin --delete v0.9.0</pre>
+
+    <h3>9.3 · Deshacer un commit que aún no subiste</h3>
+<pre class="cmd"><span class="c"># Quitar el commit y conservar tus cambios en los archivos</span>
+git reset --soft HEAD~1
+
+<span class="c"># Quitar el commit y DESCARTAR sus cambios (peligroso)</span>
+git reset --hard HEAD~1</pre>
+
+    <h3>9.4 · Deshacer un commit que ya subiste</h3>
+<pre class="cmd"><span class="c"># Crea un commit nuevo que revierte el anterior (seguro)</span>
+git revert id-del-commit
+git push</pre>
+
+    <h3>9.5 · Dejar solo las versiones que quieres</h3>
+    <div class="aviso">Reescribir el historial cambia los commits. Hazlo solo en ramas tuyas que nadie más use. Nunca lo hagas en <code>main</code> compartida sin coordinarlo.</div>
+<pre class="cmd"><span class="c"># Unir varios commits recientes en uno (interactivo)</span>
+git rebase -i HEAD~3
+<span class="c"># En el editor, cambia "pick" por "squash" en los commits a unir</span>
+
+<span class="c"># Si la rama ya estaba en GitHub, actualízala así</span>
+git push --force-with-lease</pre>
+    <p><strong>La forma más segura de quedarte solo con lo que quieres:</strong></p>
+    <ol class="pasos">
+      <li>Fusiona a <code>main</code> con un pull request solo lo que quieres conservar.</li>
+      <li>Borra las ramas sobrantes, locales y remotas (9.1).</li>
+      <li>Borra los tags que no quieres (9.2).</li>
+    </ol>
+  </section>
+
+  <!-- PLANTILLAS -->
+  <section class="card" id="plantillas">
+    <h2><span class="num">10</span>Plantillas recomendadas</h2>
+    <p>Elige la plantilla según lo que vayas a construir. Estos comandos crean el proyecto base; después sigues los pasos de las secciones 4 a 6.</p>
+    <table>
+      <thead><tr><th>Quiero construir</th><th>Plantilla recomendada</th><th>Comando para crearla</th></tr></thead>
+      <tbody>
+        <tr><td>Página web interactiva en JavaScript</td><td>Vite + React</td><td><code>npm create vite@latest mi-app -- --template react</code></td></tr>
+        <tr><td>Página web con TypeScript</td><td>Vite + React + TypeScript</td><td><code>npm create vite@latest mi-app -- --template react-ts</code></td></tr>
+        <tr><td>Sitio con páginas, rutas y buen SEO</td><td>Next.js</td><td><code>npx create-next-app@latest mi-app</code></td></tr>
+        <tr><td>API o backend en Python</td><td>Proyecto Python con uv</td><td><code>uv init mi-api</code></td></tr>
+        <tr><td>Agentes de código con OpenCode</td><td>Agentes Markdown dentro del proyecto</td><td>Ver abajo</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Agentes con OpenCode</h3>
+    <p>OpenCode es libre y ya incluye agentes. No necesitas un framework externo para tareas de código. Pasos:</p>
+    <ol class="pasos">
+      <li>Conecta tus proveedores dentro de OpenCode con <code>/connect</code> (Claude, Gemini u OpenAI, según tengas cuenta o clave).</li>
+      <li>Mira los modelos disponibles con <code>/models</code> y copia el nombre exacto del que quieras usar.</li>
+      <li>Crea un agente por archivo en <code>.opencode/agents/</code>:
+<pre class="cmd"><span class="c"># .opencode/agents/revisor.md</span>
+---
+description: Revisa cambios buscando errores y regresiones
+mode: subagent
+model: proveedor/modelo
+---
+Revisa los cambios actuales. Lista los hallazgos ordenados por
+severidad, con archivo y línea. No modifiques código.</pre>
+        Cambia <code>proveedor/modelo</code> por un nombre que aparezca en <code>/models</code>.
+      </li>
+      <li>Opcional: define un modelo por defecto del proyecto en <code>opencode.jsonc</code>:
+<pre class="cmd">{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "proveedor/modelo"
+}</pre>
+      </li>
+    </ol>
+    <div class="nota">Frameworks como LangGraph o CrewAI sirven para orquestar varios agentes con memoria y pipelines. Son de código abierto y también soportan Claude, Gemini y OpenAI. Empieza con OpenCode y pasa a ellos solo si lo necesitas.</div>
+  </section>
+
+  <!-- CHULETA -->
+  <section class="card" id="chuleta">
+    <h2><span class="num">11</span>Chuleta de comandos</h2>
+    <table>
+      <thead><tr><th>Quiero…</th><th>Comando</th></tr></thead>
+      <tbody>
+        <tr><td>Ver en qué rama estoy y qué cambié</td><td><code>git status</code></td></tr>
+        <tr><td>Actualizar main</td><td><code>git switch main</code> y <code>git pull</code></td></tr>
+        <tr><td>Crear una rama de cambio</td><td><code>git switch -c mi-cambio</code></td></tr>
+        <tr><td>Guardar una versión</td><td><code>git add .</code> y <code>git commit -m "mensaje"</code></td></tr>
+        <tr><td>Subir mi rama</td><td><code>git push origin mi-cambio</code></td></tr>
+        <tr><td>Ver el historial</td><td><code>git log --oneline</code></td></tr>
+        <tr><td>Borrar un archivo</td><td><code>git rm archivo</code>, commit y push</td></tr>
+        <tr><td>Borrar una rama vieja</td><td><code>git branch -d rama</code> y <code>git push origin --delete rama</code></td></tr>
+        <tr><td>Marcar versión oficial</td><td><code>git tag -a v1.0.0 -m "estable"</code> y <code>git push origin v1.0.0</code></td></tr>
+        <tr><td>Deshacer un commit ya subido</td><td><code>git revert id</code> y <code>git push</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>Manual generado para el proyecto Project001. Revisa los comandos antes de ejecutarlos en un repositorio con cambios importantes.</footer>
+</div>
+</body>
+</html>
